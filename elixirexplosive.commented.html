@@ -1,0 +1,101 @@
+<p id=d><script>
+
+// --- VARIABLES SUMMARY
+
+// g: grid
+// t: target
+//  \_ m: Next
+// p: points
+// a: attempts
+// s: selected ball
+// j: Match tester index
+// b: random ball
+// q: game cycle
+// ---
+// r: `replace` shorthand
+// n: `` shorthand
+// v: 20 shorthand
+
+(q=s=>{
+
+	for(
+		// Check if grid is clear...
+		c=g[v=20],
+		// ...and eventually clear it.
+		g=c?g:n=``,
+		// Iterate 101 times...
+		i=101
+	;
+		i--
+	;		
+		g=c?
+			// If grid is not clear...
+			(
+				// Remove the selected ball...
+				g[s]*a?(
+					a--,
+					w=[...g],
+					w[s]=3,
+					s=w.join``
+				)
+				:
+				g
+			)[r=`replace`](
+				// Check the removed balls...
+				/([^3])3(.)/,
+				(e,f,g)=>f+(
+					// If are not the same type...
+					f-g?
+					// Keep them else...
+					g:
+					// ...add an explosion in the middle
+					9+g
+				)
+			)[r](
+				// Check the explosions...
+				eval(`/${j=i%8}+9${j}+/`),
+				// Iterate all the exploded balls...
+				e=>[...e].map(
+					// ...and remove them from current elixir.
+					l=>t=t[r](l,n)
+				)
+				// ...and replace them with a removed ball.
+				|j&&3
+			)	
+		:
+			// ...else add a new ball to the grid.
+			g+(i%v&&b)
+	)
+		// Draw a new ball and...
+		b=4*Math.random(
+			// ...generate the next elixir.
+			m=i<8?m+b:n
+		)|4
+	;
+
+	// If the current elixir is empty...
+	t||(
+		// Give points...
+		p+=
+			// ...and more turns...
+			a+=5,
+		// ...and replace current elixir with a new one.
+		t=m
+	);
+
+	// Draw on the screen...
+	d.innerHTML=
+		// ...current score...
+		p+
+		// ...play area and current elixir...
+		[...g+t].map(
+			(e,g)=>
+			  -e?
+			  	`<a onclick=q(${g})>&#x1F53${e}</a>`
+			  :
+			  	`<p>`
+		)
+		// ...and turns left counter.
+		+a
+})(g=t=p=a=0)
+</script>
